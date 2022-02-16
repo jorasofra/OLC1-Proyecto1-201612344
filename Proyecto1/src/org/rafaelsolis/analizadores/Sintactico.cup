@@ -9,9 +9,19 @@
 
 package org.rafaelsolis.analizadores;
 import java_cup.runtime.Symbol;
+import org.rafaelsolis.beans.Conjunto;
+import org.rafaelsolis.beans.Expresion;
+import java.util.LinkedList;
 
 parser code
 {:
+    /**
+     * Listas donde se almacenarán los conjuntos y expresiones que serán
+     * analizados después
+    */
+    private LinkedList<Conjunto> listaConjuntos = new LinkedList<Conjunto>();
+    private LinkedList<Expresion> listaExpresiones = new LinkedList<Expresion>();
+
     /**
      * Método que se llama automáticamente ante algún error sintáctico
     */
@@ -28,6 +38,20 @@ parser code
         System.out.println("Error sintactico en la linea "+(s.left)+" Columna: " +
             s.right+". Componente "+s.value+" no reconocido.");
     }
+
+    /**
+     * Métodos que se llaman para invocar las listas de conjuntos y 
+     * expresiones
+    */
+    public LinkedList<Conjunto> getConjuntos() {
+        return listaConjuntos;
+    }
+
+    public LinkedList<Expresion> getExpresiones() {
+        return listaExpresiones;
+    }
+
+
 :}
 
 terminal String RCONJ;
@@ -55,7 +79,7 @@ COMENTS::=
 ;
 
 DEF_CONJ::=
-      RCONJ DPUNTOS ID ASIGNACION CONJUNTO PYCOMA DEF_CONJP
+      RCONJ DPUNTOS ID:a ASIGNACION CONJUNTO:b PYCOMA DEF_CONJP {: listaConjuntos.add(new Conjunto(a, b)); :}
 ;
 
 DEF_CONJP::=
@@ -64,7 +88,7 @@ DEF_CONJP::=
 ;
 
 DEF_EXPR::=
-      ID ASIGNACION PREFIJ PYCOMA DEF_EXPRP
+      ID:a ASIGNACION PREFIJ:b PYCOMA DEF_EXPRP {: listaExpresiones.add(new Expresion(a, b)); :}
 ;
 
 DEF_EXPRP::=

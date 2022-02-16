@@ -6,6 +6,9 @@
 package org.rafaelsolis.analizadores;
 
 import java_cup.runtime.Symbol;
+import org.rafaelsolis.beans.Conjunto;
+import org.rafaelsolis.beans.Expresion;
+import java.util.LinkedList;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 generated parser.
@@ -152,6 +155,13 @@ public class Sintactico extends java_cup.runtime.lr_parser {
 
 
     /**
+     * Listas donde se almacenarán los conjuntos y expresiones que serán
+     * analizados después
+    */
+    private LinkedList<Conjunto> listaConjuntos = new LinkedList<Conjunto>();
+    private LinkedList<Expresion> listaExpresiones = new LinkedList<Expresion>();
+
+    /**
      * Método que se llama automáticamente ante algún error sintáctico
     */
     public void syntax_error(Symbol s) {
@@ -167,6 +177,20 @@ public class Sintactico extends java_cup.runtime.lr_parser {
         System.out.println("Error sintactico en la linea "+(s.left)+" Columna: " +
             s.right+". Componente "+s.value+" no reconocido.");
     }
+
+    /**
+     * Métodos que se llaman para invocar las listas de conjuntos y 
+     * expresiones
+    */
+    public LinkedList<Conjunto> getConjuntos() {
+        return listaConjuntos;
+    }
+
+    public LinkedList<Expresion> getExpresiones() {
+        return listaExpresiones;
+    }
+
+
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -256,7 +280,13 @@ class CUP$Sintactico$actions {
           case 6: // DEF_CONJ ::= RCONJ DPUNTOS ID ASIGNACION CONJUNTO PYCOMA DEF_CONJP 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
+		String b = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
+		 listaConjuntos.add(new Conjunto(a, b)); 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("DEF_CONJ",3, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-6)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;
@@ -283,7 +313,13 @@ class CUP$Sintactico$actions {
           case 9: // DEF_EXPR ::= ID ASIGNACION PREFIJ PYCOMA DEF_EXPRP 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).right;
+		String a = (String)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-2)).value;
+		 listaExpresiones.add(new Expresion(a, b)); 
               CUP$Sintactico$result = parser.getSymbolFactory().newSymbol("DEF_EXPR",5, ((java_cup.runtime.Symbol)CUP$Sintactico$stack.elementAt(CUP$Sintactico$top-4)), ((java_cup.runtime.Symbol)CUP$Sintactico$stack.peek()), RESULT);
             }
           return CUP$Sintactico$result;

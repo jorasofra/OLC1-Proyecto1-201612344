@@ -5,17 +5,28 @@
  */
 package org.rafaelsolis.layout;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author rafael
  */
 public class Principal extends javax.swing.JFrame {
+    File archivo;
 
     /**
      * Creates new form Principal
      */
     public Principal() {
         initComponents();
+        
         setLocationRelativeTo(null);
     }
 
@@ -60,7 +71,6 @@ public class Principal extends javax.swing.JFrame {
         consola.setColumns(20);
         consola.setForeground(new java.awt.Color(255, 255, 255));
         consola.setRows(5);
-        consola.setText("Hola");
         jScrollPane2.setViewportView(consola);
 
         jLabel2.setText("Consola");
@@ -149,21 +159,92 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAbrirActionPerformed
-        // TODO add your handling code here:
+        
+        JFileChooser selectorArchivos = new JFileChooser();
+        
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivo de Expresiones", "exp");
+        
+        selectorArchivos.setFileFilter(filtro);
+        selectorArchivos.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        
+        int resultado = selectorArchivos.showOpenDialog(this);
+        
+        this.archivo = selectorArchivos.getSelectedFile();
+        
+        if (this.archivo == null || this.archivo.getName().equals("")) {
+            JOptionPane.showMessageDialog(this, "Archivo invalido", "Archivo invalido", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        try {
+            Scanner scn = new Scanner(this.archivo);
+            String texto = "";
+            while (scn.hasNext()) {
+                this.textoArchivo.append(scn.nextLine() + '\n');
+            }
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Archivo invalido", "Archivo invalido", JOptionPane.ERROR_MESSAGE);
+        }
+        
     }//GEN-LAST:event_menuAbrirActionPerformed
 
     private void menuGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGuardarActionPerformed
-        // TODO add your handling code here:
+        if (this.archivo == null) {
+            this.guardarArchivoComo();
+        } else {
+            this.guardarArchivo();
+        }
     }//GEN-LAST:event_menuGuardarActionPerformed
 
     private void menuGuardarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGuardarComoActionPerformed
-        // TODO add your handling code here:
+        this.guardarArchivoComo();
     }//GEN-LAST:event_menuGuardarComoActionPerformed
 
     private void menuGenerarXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGenerarXMLActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuGenerarXMLActionPerformed
 
+    private void guardarArchivoComo() {
+        JFileChooser guardarArchivo = new JFileChooser();
+        
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivo de Expresiones", "exp");
+        
+        guardarArchivo.setFileFilter(filtro);
+        
+        int valor = guardarArchivo.showSaveDialog(this);
+        
+        if (valor == JFileChooser.APPROVE_OPTION) {
+            File file = guardarArchivo.getSelectedFile();
+            if (file == null) {
+                return;
+            }
+            if (!file.getName().toLowerCase().endsWith("exp")) {
+                file = new File(file.getParentFile(), file.getName() + ".exp");
+            }
+            
+            try {
+                FileWriter fw = new FileWriter(file);
+                fw.write(this.textoArchivo.getText());
+                fw.close();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error al guardar el archivo", 
+                    "Error al guardar el archivo", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    private void guardarArchivo() {
+        try {
+            FileWriter fw = new FileWriter(this.archivo);
+            fw.write(this.textoArchivo.getText());
+            fw.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar el archivo", 
+                    "Error al guardar el archivo", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
