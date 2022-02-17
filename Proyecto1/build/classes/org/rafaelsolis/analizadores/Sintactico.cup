@@ -66,10 +66,11 @@ non terminal TERMINAL, EVALUA, EVALUAP;
 
 start with INICIO;
 
-INICIO::=INSTR;
+INICIO::= LLAVEA INSTR LLAVEC;
 
 INSTR::=
       COMENTS INSTR
+    | COMENTS
     | DEF_CONJ
 ;
 
@@ -83,18 +84,20 @@ DEF_CONJ::=
 ;
 
 DEF_CONJP::=
-      INSTR
+      COMENTS DEF_CONJ
+    | COMENTS DEF_EXPR
+    | DEF_CONJ
     | DEF_EXPR
 ;
 
 DEF_EXPR::=
-      ID:a ASIGNACION PREFIJ:b PYCOMA DEF_EXPRP {: listaExpresiones.add(new Expresion(a, b)); :}
+    ID:a ASIGNACION PREFIJ:b PYCOMA DEF_EXPRP {: listaExpresiones.add(new Expresion(a, b)); :}
 ;
 
 DEF_EXPRP::=
       COMENTS
     | DEF_EXPR
-    | SEPARADOR EVALUA
+    | SEPARADOR SEPARADOR EVALUA
 ;
 
 PREFIJ::=

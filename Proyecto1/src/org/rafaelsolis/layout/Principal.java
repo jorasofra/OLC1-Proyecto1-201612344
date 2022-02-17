@@ -5,14 +5,20 @@
  */
 package org.rafaelsolis.layout;
 
+import org.rafaelsolis.analizadores.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.LinkedList;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.rafaelsolis.beans.Conjunto;
+import org.rafaelsolis.beans.Expresion;
 
 /**
  *
@@ -65,6 +71,11 @@ public class Principal extends javax.swing.JFrame {
         btnGenerarAutomata.setText("Generar Automatas");
 
         btnAnalizarEntrada.setText("Analizar Entrada");
+        btnAnalizarEntrada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnalizarEntradaActionPerformed(evt);
+            }
+        });
 
         consola.setEditable(false);
         consola.setBackground(new java.awt.Color(0, 0, 0));
@@ -203,6 +214,30 @@ public class Principal extends javax.swing.JFrame {
     private void menuGenerarXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGenerarXMLActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuGenerarXMLActionPerformed
+
+    private void btnAnalizarEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarEntradaActionPerformed
+        Sintactico pars;
+        LinkedList<Conjunto> listaConjuntos = null;
+        LinkedList<Expresion> listaExpresiones = null;
+        
+        try {
+            pars = new Sintactico(new Lexico(new StringReader(this.textoArchivo.getText())));
+            pars.parse();
+            listaConjuntos = pars.getConjuntos();
+            listaExpresiones = pars.getExpresiones();
+        } catch (Exception e) {
+            System.out.println("Error en la compilación");
+        }
+        
+        for (Expresion expresion : listaExpresiones) {
+            System.out.println(expresion.getNombre() + " " + expresion.getExpresion());
+        }
+        
+        for (Conjunto conjunto : listaConjuntos) {
+            System.out.println(conjunto.getNombre() + " " + conjunto.getConjunto());
+        }
+        
+    }//GEN-LAST:event_btnAnalizarEntradaActionPerformed
 
     private void guardarArchivoComo() {
         JFileChooser guardarArchivo = new JFileChooser();

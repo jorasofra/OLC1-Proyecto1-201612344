@@ -26,12 +26,12 @@ import java_cup.runtime.Symbol;
 
 BLANCOS=[ \r\t]+
 
-ID=[a-zA-Z]+["_"|(D)|a-zA-Z]*
+ID=[A-Za-z]+["_"0-9A-Za-z]*
 ASIGNACION="->"
 COMENT_MLINEA="<!""!"*([^!>]|[^!]">"|"!"[^>])*"!"*"!>"
 COMENT_ULINEA=("//".*\r\n)|("//".*\n)|("//".*\r)
-CADENA_COMILLAS=["]([^\"\n]|(\\\"))*["]
-CONJUNTO=[a-zA-Z("~")a-zA-Z]|[0-9("~")0-9]|[a-zA-Z(","a-zA-Z)*]|[0-9(","0-9)*]|[!-&("~")!-&]|[!-&(","!-&)*]
+CADENA_COMILLAS=[\"]([^\"\n]|(\\\"))*[\"]
+CONJUNTO=([a-zA-Z]"~"[a-zA-Z])|([0-9]"~"[0-9])|([a-zA-Z](","[a-zA-Z])*)|([0-9](","0-9)*)|[!-&]"~"[!-&]|([!-&](","[!-&])*)
 SEPARADOR="%%"
 %%
 
