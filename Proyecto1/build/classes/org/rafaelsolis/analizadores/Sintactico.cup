@@ -21,6 +21,7 @@ parser code
     */
     private LinkedList<Conjunto> listaConjuntos = new LinkedList<Conjunto>();
     private LinkedList<Expresion> listaExpresiones = new LinkedList<Expresion>();
+    private String idActual;
 
     /**
      * Método que se llama automáticamente ante algún error sintáctico
@@ -84,20 +85,19 @@ DEF_CONJ::=
 ;
 
 DEF_CONJP::=
-      COMENTS DEF_CONJ
-    | COMENTS DEF_EXPR
+      COMENTS DEF_CONJP
     | DEF_CONJ
     | DEF_EXPR
 ;
 
 DEF_EXPR::=
-    ID:a ASIGNACION PREFIJ:b PYCOMA DEF_EXPRP {: listaExpresiones.add(new Expresion(a, b)); :}
+    ID:a ASIGNACION PREFIJ:b PYCOMA DEF_EXPRP {: idActual = a; :}
 ;
 
 DEF_EXPRP::=
-      COMENTS
+      COMENTS DEF_EXPRP
     | DEF_EXPR
-    | SEPARADOR SEPARADOR EVALUA
+    | SEPARADOR SEPARADOR EVALUAP
 ;
 
 PREFIJ::=
@@ -107,24 +107,26 @@ PREFIJ::=
 ;
 
 PREFIJP::=
-      CONCATENACION PREFIJ
-    | DISYUNCION PREFIJ
-    | CKLEENE PREFIJ
-    | CPOSITIVA PREFIJ
-    | CANULABLE PREFIJ
+      CONCATENACION:a PREFIJ {: listaExpresiones.add(new Expresion(idActual, a)); :}
+    | DISYUNCION:a PREFIJ    {: listaExpresiones.add(new Expresion(idActual, a)); :}
+    | CKLEENE:a PREFIJ       {: listaExpresiones.add(new Expresion(idActual, a)); :}
+    | CPOSITIVA:a PREFIJ     {: listaExpresiones.add(new Expresion(idActual, a)); :}
+    | CANULABLE:a PREFIJ     {: listaExpresiones.add(new Expresion(idActual, a)); :}
 ;
 
 TERMINAL::=
-      LLAVEA ID LLAVEC
-    | CADENA_COMILLAS
+      LLAVEA ID:a LLAVEC {: listaExpresiones.add(new Expresion(idActual, a)); :}
+    | CADENA_COMILLAS :a {: listaExpresiones.add(new Expresion(idActual, a)); :}
 ;
 
 EVALUA::= 
       ID DPUNTOS CADENA_COMILLAS PYCOMA EVALUAP
+    | ID DPUNTOS CADENA_COMILLAS PYCOMA
 ;
 
 EVALUAP::=
       EVALUA
+    | COMENTS EVALUAP
     | COMENTS
 ;
 
